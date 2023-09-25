@@ -9,24 +9,36 @@ function EdsPulseHard()
 sys.magnet=0.33;
 sys.isotopes={'E', 'E'};
 sys.labels={'Electron1', 'Electron2'};
+
+% ----------------------- INTERACTIONS -------------------------------
+% _______________________   G VALUES   ________________________________
+% Spatial Coupling alternative, NxN spins of 1x3 arrays. eigenbasis/diagonlaised. 
 inter.zeeman.eigs={[2.056, 2.056, 2.205];
                    [2.009, 2.006, 2.003]};
 inter.zeeman.euler={[0 0 0]; [0 0 0]};
+%inter.zeeman.matrix={ [5 0 0; 0 5 0; 0 0 5] ...
+%                      [5 0 0; 0 5 0; 0 0 5] ...
+%                      [2.0023 0 0; 0 2.0025 0; 0 0 2.0027]};
 inter.coordinates={[0 0 0]; [20 0 0]};
-inter.temperature = 10;
-% inter.relaxation={'redfield','SRFK','SRSK'};
 
+% _______________________   J COUPLING   ________________________________
+% Isotropic couplings (in Hz). Individual cells in the array may be left empty, in which case zeros are assumed.
+inter.coupling.scalar={0 50; 0 0};
 
-% g values
-% t1 
-% t2 
-% j matrix
-% euler angles. 
-
+% ---------------------- RELAXATION -----------------------
+% Longitudinal and transverse relaxation rates (not times) in Hz should be provided for each spin. 
+% Liouville space spherical tensor formalism.
+%inter.relaxation={'t1_t2'};
+%inter.r1_rates=[1.0 2.0 5.0];  
+%inter.r2_rates=[5.0 7.0 9.0];
 
 % Basis set
-bas.formalism='zeeman-hilb';
-bas.approximation = 'none';
+bas.formalism='sphten-liouv';
+bas.approximation = 'IK-2';
+% Temeperature
+inter.temperature = 2; % Kelvin.
+
+%bas.formalism='zeeman-hilb';
 %bas.approximation='IK-2';
 %bas.connectivity='full_tensors';
 %bas.space_level = 2;
@@ -37,15 +49,18 @@ bas.approximation = 'none';
 % Spinach housekeeping
 spin_system=create(sys,inter);
 spin_system=basis(spin_system,bas);
+R = relaxation(spin_system, inter.zeeman.euler);
 
 % Sequence parameters
 parameters.spins={'E', 'E'};
-parameters.rho0=state(spin_system,'Lz',[1 2]);
-parameters.coil=state(spin_system,'Lz',[1 2]);
-parameters.ex_prob = operator(spin_system,{'L+'},{1});
-%parameters.ex_prob=(operator(spin_system,{'L+'},{1})+...
-%                    operator(spin_system,{'L-'},{1}))/2;
-parameters.ex_pump = operator(spin_system,{'L-'},{2});
+parameters.rho0=state(spin_system,{'Lz','Lz'}, {1,2}, exact);
+parameters.coil=state(spin_system,{'Lz','Lz'}, {1,2}, exact);
+% Rot around X
+parameters.ex_prob=(operator(spin_system,{'L+'},{1})+...
+                    operator(spin_system,{'L-'},{1}))/2;
+% Rot around Y.
+parameters.ex_pump=(operator(spin_system,{'L+'},{1})-...
+                    operator(spin_system,{'L-'},{1}))/2;
 parameters.ta=2e-7;
 parameters.tb=1e-7;
 parameters.t_last=1.5e-7; % 2.5
@@ -54,7 +69,7 @@ parameters.grid='rep_2ang_1600pts_sph';
 parameters.orientation = [0 0 0]; % added to satisfy 'crystal' /powder
 
 % Execute pulse sequence
-echo=crystal(spin_system,@Eds_Hard_Echo,parameters,'esr');
+echo=powder(spin_system,@Eds_Hard_Echo, parameters,'esr');
 
 % P=sphten2zeeman(spin_system);
 % zeeman_rho=P*echo;
@@ -67,5 +82,4 @@ time_axis=linspace(-parameters.t_last/2,...
 figure(); plot(1e6*time_axis,imag(echo)); kgrid;
 xlabel('time, microseconds'); axis tight;
 ylabel('Magnetisation');
-
 end

@@ -46,7 +46,6 @@
 % <https://spindynamics.org/wiki/index.php?title=deer_3p_hard_echo.m>
 
 function echo=Eds_Hard_Echo(spin_system,parameters,H,R,K)
-
 % Check consistency
 grumble(parameters,H,R,K)
 
@@ -62,7 +61,6 @@ echo=evolution(spin_system,L,parameters.coil,rho,...
 
 %echo=evolution(spin_system,L,parameters.coil,parameters.rho0,...
 %               parameters.t_last/parameters.nsteps,parameters.nsteps,'observable');
-
 end
 
 % Consistency enforcement
