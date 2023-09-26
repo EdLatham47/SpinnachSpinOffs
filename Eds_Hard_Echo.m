@@ -53,11 +53,12 @@ grumble(parameters,H,R,K)
 L=H+1i*R+1i*K;
 
 % First pulse
-rho=step(spin_system, parameters.ex_prob,parameters.rho0,pi);
+% rho=step(spin_system, parameters.ex_prob,parameters.rho0,pi);
+rho=evolution(spin_system, L, [], parameters.rho0, parameters.ta,  pi);
 
 % Evolution
 echo=evolution(spin_system,L,parameters.coil,rho,...
-               parameters.t_last/parameters.nsteps,parameters.nsteps,'observable');
+               parameters.t_last/parameters.nsteps,parameters.nsteps,'multichannel');
 
 %echo=evolution(spin_system,L,parameters.coil,parameters.rho0,...
 %               parameters.t_last/parameters.nsteps,parameters.nsteps,'observable');
