@@ -91,26 +91,33 @@ function echo_stack=SoftStates_Pulses3(spin_system,parameters,H,R,K)
                                                             parameters.pulse_rnk(1),parameters.method);
     % Evolution
     stepsize=parameters.p1_p3_gap/parameters.p2_nsteps;
-    rho_stack=evolution(spin_system,L,[],rho,stepsize,parameters.p2_nsteps,'trajectory');
+%    rho_stack=evolution(spin_system,L,[],rho,stepsize,parameters.p2_nsteps,'trajectory');
     
     % Second pulse
-    rho_stack=shaped_pulse_af(spin_system,L,Ex,Ey,rho_stack,parameters.pulse_frq(2),parameters.pulse_pwr(2),...
-                                                            parameters.pulse_dur(2),parameters.pulse_phi(2),...
-                                                            parameters.pulse_rnk(2),parameters.method);
+%    rho_stack=shaped_pulse_af(spin_system,L,Ex,Ey,rho_stack,parameters.pulse_frq(2),parameters.pulse_pwr(2),...
+%                                                            parameters.pulse_dur(2),parameters.pulse_phi(2),...
+%                                                            parameters.pulse_rnk(2),parameters.method);
     % Evolution
-    rho_stack(:,end:-1:1)=evolution(spin_system,L,[],rho_stack(:,end:-1:1),stepsize,parameters.p2_nsteps,'refocus');
+%    rho_stack(:,end:-1:1)=evolution(spin_system,L,[],rho_stack(:,end:-1:1),stepsize,parameters.p2_nsteps,'refocus');
     
     % Third pulse
-    rho_stack=shaped_pulse_af(spin_system,L,Ex,Ey,rho_stack,parameters.pulse_frq(3),parameters.pulse_pwr(3),...
-                                                            parameters.pulse_dur(3),parameters.pulse_phi(3),...
-                                                            parameters.pulse_rnk(3),parameters.method);
+%    rho_stack=shaped_pulse_af(spin_system,L,Ex,Ey,rho_stack,parameters.pulse_frq(3),parameters.pulse_pwr(3),...
+%                                                            parameters.pulse_dur(3),parameters.pulse_phi(3),...
+%                                                            parameters.pulse_rnk(3),parameters.method);
     % Evolve to the edge of the echo window
-    echo_location=parameters.p1_p3_gap+parameters.pulse_dur(1)/2+...
-                  parameters.pulse_dur(2)-parameters.echo_time/2;
+    echo_location=parameters.pulse_dur(1);
+    %first pulse down, no gap -> start measuring state.
+    %echo_location=parameters.p1_p3_gap+parameters.pulse_dur(1)/2+...
+    %              parameters.pulse_dur(1)-parameters.echo_time/2;
+
+    % Original - 
+    %rho_stack=evolution(spin_system,L,[],rho_stack,echo_location,1,'final');
+    % Mine
+    rho_stack=evolution(spin_system,L,[],rho,stepsize,parameters.p2_nsteps,'trajectory');
+    rho_stack(:,end:-1:1)=evolution(spin_system,L,[],rho_stack(:,end:-1:1),stepsize,parameters.p2_nsteps,'refocus');
     rho_stack=evolution(spin_system,L,[],rho_stack,echo_location,1,'final');
-                                                      
-    % Detect the echo
-    stepsize=parameters.echo_time/parameters.echo_npts;
+
+    % Detect Echo
     echo_stack=evolution(spin_system,L,parameters.coil,rho_stack,...
                          stepsize,parameters.echo_npts,'observable');
                      
@@ -131,38 +138,38 @@ function echo_stack=SoftStates_Pulses3(spin_system,parameters,H,R,K)
     if ~isfield(parameters,'pulse_frq')
         error('pulse frequencies must be specified in parameters.pulse_frq field.');
     end
-    if (~isnumeric(parameters.pulse_frq))||(~isreal(parameters.pulse_frq))||...
-       (numel(parameters.pulse_frq)~=3)
-        error('parameters.pulse_frq must have three real elements.');
-    end
+%    if (~isnumeric(parameters.pulse_frq))||(~isreal(parameters.pulse_frq))||...
+%       (numel(parameters.pulse_frq)~=3)
+%        error('parameters.pulse_frq must have three real elements.');
+%    end
     if ~isfield(parameters,'pulse_pwr')
         error('pulse powers must be specified in parameters.pulse_pwr field.');
     end
-    if (~isnumeric(parameters.pulse_pwr))||(~isreal(parameters.pulse_pwr))||...
-       (numel(parameters.pulse_pwr)~=3)||any(parameters.pulse_pwr<=0)
-        error('parameters.pulse_pwr must have three positive real elements.');
-    end
+%    if (~isnumeric(parameters.pulse_pwr))||(~isreal(parameters.pulse_pwr))||...
+%       (numel(parameters.pulse_pwr)~=3)||any(parameters.pulse_pwr<=0)
+%        error('parameters.pulse_pwr must have three positive real elements.');
+%    end
     if ~isfield(parameters,'pulse_dur')
         error('pulse durations must be specified in parameters.pulse_dur field.');
     end
-    if (~isnumeric(parameters.pulse_dur))||(~isreal(parameters.pulse_dur))||...
-       (numel(parameters.pulse_dur)~=3)||any(parameters.pulse_dur<=0)
-        error('parameters.pulse_dur must have three positive real elements.');
-    end
+%    if (~isnumeric(parameters.pulse_dur))||(~isreal(parameters.pulse_dur))||...
+%       (numel(parameters.pulse_dur)~=3)||any(parameters.pulse_dur<=0)
+%        error('parameters.pulse_dur must have three positive real elements.');
+%    end
     if ~isfield(parameters,'pulse_phi')
         error('pulse phases must be specified in parameters.pulse_phi field.');
     end
-    if (~isnumeric(parameters.pulse_phi))||(~isreal(parameters.pulse_phi))||...
-       (numel(parameters.pulse_phi)~=3)
-        error('parameters.pulse_phi must have three real elements.');
-    end
+%    if (~isnumeric(parameters.pulse_phi))||(~isreal(parameters.pulse_phi))||...
+%       (numel(parameters.pulse_phi)~=3)
+%        error('parameters.pulse_phi must have three real elements.');
+%    end
     if ~isfield(parameters,'pulse_rnk')
         error('pulse grid ranks must be specified in parameters.pulse_rnk field.');
     end
-    if (~isnumeric(parameters.pulse_rnk))||(~isreal(parameters.pulse_rnk))||...
-       (numel(parameters.pulse_rnk)~=3)||any(mod(parameters.pulse_rnk,1)~=0)
-        error('parameters.pulse_rnk must have three integer real elements.');
-    end
+%    if (~isnumeric(parameters.pulse_rnk))||(~isreal(parameters.pulse_rnk))||...
+%       (numel(parameters.pulse_rnk)~=3)||any(mod(parameters.pulse_rnk,1)~=0)
+%        error('parameters.pulse_rnk must have three integer real elements.');
+%    end
     if ~isfield(parameters,'rho0')
         error('initial state must be specified in parameters.rho0 variable.');
     end

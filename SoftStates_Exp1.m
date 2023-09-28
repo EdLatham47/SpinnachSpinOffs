@@ -12,7 +12,6 @@ function SoftStates_Exp1()
     
     % Isotopes
     sys.isotopes={'E','E'};
-    ,,
     % Zeeman interactions
     inter.zeeman.eigs=cell(1,2);
     inter.zeeman.euler=cell(1,2);
@@ -67,7 +66,7 @@ function SoftStates_Exp1()
     
     % DEER echo timing parameters
     parameters.p1_echo_gap=1e-6;
-
+    parameters.fwhm=5;
     parameters.p1_p3_gap=1e-6;
     parameters.p2_nsteps=100;
     parameters.echo_time=100e-9;
@@ -75,6 +74,6 @@ function SoftStates_Exp1()
     % Wrap thesse inputs, to then see a T2 time. 
     
     % Simulation and plotting
-    SoftStates_Pulses2(spin_system,parameters);
+    SoftStates_Plots2(spin_system,parameters);
     
     end
