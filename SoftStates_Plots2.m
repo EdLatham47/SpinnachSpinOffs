@@ -60,7 +60,6 @@
 % <https://spindynamics.org/wiki/index.php?title=deer_3p_soft_diag.m>
 
 function SoftStates_Plots2(spin_system,parameters)
-
     % Check consistency
     grumble(parameters);
     
@@ -69,16 +68,16 @@ function SoftStates_Plots2(spin_system,parameters)
     
     % Apodisation and Fourier transform
     fid_a=apodization(fids(:,1),'crisp-1d'); spectrum_a=fftshift(fft(fid_a,parameters.zerofill));
-    %fid_b=apodization(fids(:,2),'crisp-1d'); spectrum_b=fftshift(fft(fid_b,parameters.zerofill));
-    %fid_c=apodization(fids(:,3),'crisp-1d'); spectrum_c=fftshift(fft(fid_c,parameters.zerofill));
-    %fid_d=apodization(fids(:,4),'crisp-1d'); spectrum_d=fftshift(fft(fid_d,parameters.zerofill));
+    fid_b=apodization(fids(:,2),'crisp-1d'); spectrum_b=fftshift(fft(fid_b,parameters.zerofill));
+    fid_c=apodization(fids(:,3),'crisp-1d'); spectrum_c=fftshift(fft(fid_c,parameters.zerofill));
+    fid_d=apodization(fids(:,4),'crisp-1d'); spectrum_d=fftshift(fft(fid_d,parameters.zerofill));
     
     % Plotting
     figure();
     subplot(2,2,1); plot_1d(spin_system,real(spectrum_a),parameters,'r-'); title('frequency sweep epr');
-    %subplot(2,2,2); plot_1d(spin_system,real(spectrum_b),parameters,'r-'); title('first pulse');
-    %subplot(2,2,3); plot_1d(spin_system,real(spectrum_c),parameters,'r-'); title('second pulse');
-    %subplot(2,2,4); plot_1d(spin_system,real(spectrum_d),parameters,'r-'); title('third pulse');
+    subplot(2,2,2); plot_1d(spin_system,real(spectrum_b),parameters,'r-'); title('first pulse');
+    subplot(2,2,3); plot_1d(spin_system,real(spectrum_c),parameters,'r-'); title('second pulse');
+    subplot(2,2,4); plot_1d(spin_system,real(spectrum_d),parameters,'r-'); title('third pulse');
     drawnow();
     
     % Get DEER echo stack
@@ -121,7 +120,6 @@ function SoftStates_Plots2(spin_system,parameters)
             'v_2\cdot\sigma_2',...
             'v_3\cdot\sigma_3'}); kgrid;
     title('principal components of the echo stack');
-    
     end
     
     % Consistency enforcement
@@ -133,10 +131,3 @@ function SoftStates_Plots2(spin_system,parameters)
         error('parameters.assumptions must be a character string.');
     end
     end
-    
-    % The "name-blind" application procedures (wherein the applicant's name
-    % is removed from the CV) were hastily discontinued in Australian Public
-    % Service after it emerged that gender and ethnicity biases in recruit-
-    % ment had increased, rather than decreased, as a result.
-    
-    
