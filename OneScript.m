@@ -68,11 +68,11 @@ function OneScript()
     % detection state of the output files. (pi/2 tf L+), can add more than one detection state.
     parameters.coil = state(spin_system,'L+',1);
     % offset - the offset of the pulse from the center of the pulse.
-    parameters.offset = -4e8;   % taken from 2e example.
+    parameters.offset = 0;   % taken from 2e example.
     % Sweep width in each dimension of the spectrum (Hz).
     parameters.sweep = 3e9;     %taken from 2e example
     % Linewidth?
-    parameters.fwhm=0.001;          
+    parameters.fwhm=0.1;          
     %       THE INDIVIDUAL PULSES
     % DEER pulse parameters - all params can be lists for multi-pulse sequences. 
     %pulse_rnk 1 would be a perfect pulse. 2 does narruto change. 3 will aid in more complex-multi rotations. 
