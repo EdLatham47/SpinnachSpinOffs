@@ -6,16 +6,16 @@
 function SoftStates_Exp1()
 
     % Magnet field
-    sys.magnet=0.3451805;
+    sys.magnet=0.333333;
     
     % Isotopes
     sys.isotopes={'E','E'};
     % Zeeman interactions
     inter.zeeman.eigs=cell(1,2);
     inter.zeeman.euler=cell(1,2);
-    inter.zeeman.eigs{1}=[2.003 2.003 2.003];
+    inter.zeeman.eigs{1}=[2.0027 2.0029 2.0031];
     inter.zeeman.euler{1}=[0 0 0]*(pi/180);
-    inter.zeeman.eigs{2}=[2.007 2.007 2.007];
+    inter.zeeman.eigs{2}=[2.0027 2.0029 2.0031];
     inter.zeeman.euler{2}=[0 0 0]*(pi/180);
     
     % Coordinates (Angstrom)
@@ -52,9 +52,9 @@ function SoftStates_Exp1()
     parameters.npoints=256;
     parameters.zerofill=2048;
     parameters.axis_units='GHz-labframe';
-    parameters.derivative=0;
+    parameters.derivative=1;
     parameters.invert_axis=1;
-    parameters.assumptions='esr';
+    parameters.assumptions='deer-zz';
     
     % DEER pulse parameters - all params can be lists for multi-pulse sequences. 
     %pulse_rnk 1 would be a perfect pulse. 2 does narruto change. 3 will aid in more complex-multi rotations. 
@@ -68,20 +68,29 @@ function SoftStates_Exp1()
     % Frequency of the pulse - independantly specified is a bit odd.
     parameters.pulse_frq=[9.4e9 34e9 9.4e9];
     
+
     % DEER echo timing parameters
     parameters.p1_echo_gap=1e-6;
     % Linewidth?
-    parameters.fwhm=5;
+    parameters.fwhm=0.001;
     % same spin gap.
     parameters.p1_p3_gap=1e-6;
     % splits the pulse into that many steps for modelling (timeframe/nsteps). 
     parameters.p2_nsteps=100;
     %location of the echo.
-    parameters.echo_time=10e-9;
+    parameters.echo_time=1e-6; %100e-9;
     %split echo into steps, for greater clarity, increase.
-    parameters.echo_npts=100;
+    parameters.echo_npts=1000;
 
     % Wrap thesse inputs, to then see a T2 time. 
     % Simulation and plotting
+    P = sphten2zeeman(spin_system);
+    Happiness=P*parameters.rho0
+    stateinfo(spin_system, Happiness, 4)
+
     SoftStates_Plots2(spin_system,parameters);
+
+    P = sphten2zeeman(spin_system);
+    Happiness=P*parameters.rho0
+    stateinfo(spin_system, Happiness, 4)
     end

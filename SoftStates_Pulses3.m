@@ -80,10 +80,11 @@ function echo_stack=SoftStates_Pulses3(spin_system,parameters,H,R,K)
                                                             parameters.pulse_dur(3),parameters.pulse_phi(3),...
                                                             parameters.pulse_rnk(3),parameters.method);
     % Evolve to the edge of the echo window
-    echo_location=parameters.pulse_dur(1);
+    %echo_location=parameters.pulse_dur(1);
     %first pulse down, no gap -> start measuring state.
-%    echo_location=parameters.p1_p3_gap+parameters.pulse_dur(1)/2+...
-%                  parameters.pulse_dur(1)-parameters.echo_time/2;
+    
+    echo_location=parameters.p1_p3_gap+parameters.pulse_dur(1)/2+...
+                  parameters.pulse_dur(1)-parameters.echo_time/2;
     % Original - 
     rho_stack=evolution(spin_system,L,[],rho_stack,echo_location,1,'final');
     % Mine

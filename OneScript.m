@@ -21,13 +21,13 @@ function OneScript()
     inter.zeeman.euler{2}=[0 0 0];
     inter.coordinates{2}=[1.5 0 0]; % Angstrungs
     % - Relaxation
-    inter.relaxation={'lindblad'};
-    inter.lind_r1_rates=[1.0 1.0]; % Hz
-    inter.lind_r2_rates=[1.0 1.0]*10^5; % Hz
+    %inter.relaxation={'lindblad'}; %lindblad
+    %inter.lind_r1_rates=[1.0 1.0]*10^-5; % Hz
+    %inter.lind_r2_rates=[1.0 1.0]*10^5; % Hz
     inter.temperature=2; %Kelvin. Default: Spinach uses the high-temperature approximation. 
                         % Specifying zero makes the system start at the lowest energy eigenstate of the Hamiltonian.
-    inter.rlx_keep='diagonal';%Not sure what these do..... will require further investigation.
-    inter.equilibrium='zero';
+    %inter.rlx_keep='diagonal';%Not sure what these do..... will require further investigation.
+    %inter.equilibrium='zero';
     % inter.coupling.scalar = {0 30*10^6; 0 0}; % Off diags are coupling strengths in Hz.
     
     %Create Spin System using the specifications above. (Before experimental parameters.)
@@ -42,7 +42,7 @@ function OneScript()
     % spherical averaging grid for solid state experiments
     parameters.grid='rep_2ang_6400pts_sph'; % ~./spinnach_2_7_6049/kernel/grids
     % MEthod. soft puse propagation method,'expv' for Krylov propagation,'expm' for exponential propagation, 'evolution' for Spinach evolution function
-    parameters.method='expm';
+    parameters.method='evolution';
     % Fidelity of the pulse. (Keep in 2^n for ease of computation.)
     parameters.npoints = 256;
     % zerofill - Fidelity of Free Induction Decay Plots. (First Figure) 
@@ -53,7 +53,7 @@ function OneScript()
     % if set to 1, the spectrum is multiplied by -1 before plotting (Left to right right to left for the Hz)
     parameters.invert_axis=1; 
     % As oppose to nmr, 
-    parameters.assumptions='esr';
+    parameters.assumptions='deer-zz';
     %STFU
     parameters.verbose=0;
     
@@ -64,7 +64,7 @@ function OneScript()
     %           EXPERIMENTAL PARAMETERS
     parameters.spins = {'E'}; % spins of the molecule that will be activlley operated on.
     % a combined initial state of both spins, alligned in the Bz direction. 
-    parameters.rho0=state(spin_system,{'Lz','Lz'}, {1,2});
+    parameters.rho0=state(spin_system,{'Lz','Lz'},{1,2});
     % detection state of the output files. (pi/2 tf L+), can add more than one detection state.
     parameters.coil = state(spin_system,'L+',1);
     % offset - the offset of the pulse from the center of the pulse.
@@ -80,7 +80,7 @@ function OneScript()
     % Pulse duration
     parameters.pulse_dur=[20e-9 40e-9 40e-9];       % altered 30ns suggestion
     % Phase on initial wave
-    parameters.pulse_phi=[pi/2 pi/2 pi/2];
+    parameters.pulse_phi=[pi pi pi];
     % Power of the pulse
     parameters.pulse_pwr=2*pi*[8e6 8e6 8e6];
     % Frequency of the pulse - independantly specified is a bit odd.
@@ -94,6 +94,11 @@ function OneScript()
     % pfidelity of echo
     parameters.echo_nsteps=100;
     %           SIMULATION
-    % End of inputs, begin simulation. 
+    % End of inputs, begin simulation.
+
+    P = sphten2zeeman(spin_system);
+    Happiness=P*parameters.rho0
+    stateinfo(spin_system, Happiness, 4)
+    %works but they arent set up right.
     OneScript_Plots(spin_system, parameters)
     end

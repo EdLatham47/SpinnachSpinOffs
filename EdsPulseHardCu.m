@@ -54,7 +54,8 @@ R = relaxation(spin_system, inter.zeeman.euler);
 % Sequence parameters
 parameters.spins={'E', 'E'};
 parameters.rho0=state(spin_system,{'L+','L+'}, {1,2});
-parameters.coil=state(spin_system,{'L+'}, {2});
+parameters.coil=[state(spin_system,{'L+'}, {2})...
+                    state(spin_system,{'L+'}, {2})];
 % Rot around X
 parameters.ex_prob=(operator(spin_system,{'L+'},{1})+...
                     operator(spin_system,{'L-'},{1}))/2;
