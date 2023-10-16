@@ -46,8 +46,9 @@ function SoftStates_Exp1()
     parameters.verbose=0;
     
     % EPR parameters
-    parameters.offset=-4e8;
+    parameters.offset=10e8;
     parameters.sweep=3e9;
+    
     % npoibnts divides the time step of evolution. 
     parameters.npoints=256;
     parameters.zerofill=2048;

@@ -11,20 +11,18 @@ function OneScript_Plots(spin_system,parameters)
 
     % Plotting those spectrums.
     figure(); ylabel('Magnetisation, arb.u.'); xlabel('frequency, MHz');
-    subplot(2,2,1); plot_1d(spin_system, real(spectrum_1), parameters,'r-'); title('Frequency Sweep EPR')
-    subplot(2,2,2); plot_1d(spin_system, real(spectrum_2), parameters,'r-'); title('Spectrum After 1st Pulse')
-    subplot(2,2,3); plot_1d(spin_system, real(spectrum_3), parameters,'r-'); title('Spectrum After 2nd Pulse')
-    subplot(2,2,4); plot_1d(spin_system, real(spectrum_4), parameters,'r-'); title('Spectrum After 3rd Pulse')
+    subplot(2,2,1); plot_1d(spin_system, real(spectrum_1), parameters,'r-'); title('Freq Swp EPR')
+    subplot(2,2,2); plot_1d(spin_system, real(spectrum_2), parameters,'r-'); title('Spec aft P1')
+    subplot(2,2,3); plot_1d(spin_system, real(spectrum_3), parameters,'r-'); title('Spec aft P2')
+    subplot(2,2,4); plot_1d(spin_system, real(spectrum_4), parameters,'r-'); title('Spec aft P3')
     drawnow();
     
-
     % Second Sim. complete Successive pulses with evolution in middle.
     echo_stack = powder(spin_system, @OneScript_PulseSequence, parameters, parameters.assumptions );
 
     echo_axis=1e9*linspace(-parameters.echo_time/2,parameters.echo_time/2, parameters.echo_nsteps+1);
     % time axis for the Deer trace.
     deer_axis=1e6*linspace(0,parameters.p1_p3_gap, parameters.p2_nsteps+1);
-
     [deer_axis_2d,echo_axis_2d]=meshgrid(deer_axis,echo_axis);
 
     % Plotting the echo stack.

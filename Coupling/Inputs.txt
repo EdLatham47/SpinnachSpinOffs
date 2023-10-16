@@ -1,0 +1,15 @@
+Scalar1.1	,2,3,4	-	30*10^6
+Distance1.1	,2,3,4	-	1.5 A
+
+g values as given. (Observing Spin1or2.Figure)
+10Kelvin
+Offset=0
+Bw=1
+sweep=1e9
+fwhm0.1
+
+Freq = 10.3e9
+Duration = 20 40 40 ns
+Power = 2*pi* 8e6
+
+~Bw in Spencosy.m
