@@ -12,7 +12,7 @@ function echo_stack=OneScript_PulseSequence(spin_system, parameters, H, R, K)
     rho=shaped_pulse_af(spin_system,L,Ex,Ey,parameters.rho0,parameters.pulse_frq(1),parameters.pulse_pwr(1),...
         parameters.pulse_dur(1),parameters.pulse_phi(1),parameters.pulse_rnk(1),parameters.method);
     % Evolutino after first pulse. 
-    stepsize=parameters.p1_p3_gap/(2*parameters.p2_nsteps);
+    stepsize=parameters.p1_p3_gap/parameters.p2_nsteps;
     %evolution of states after first pulse. - trajectory allows for toatiaons in xy plane.  
     rho_stack=evolution(spin_system, L, [], rho, stepsize, parameters.p2_nsteps, 'trajectory');
 
@@ -26,11 +26,12 @@ function echo_stack=OneScript_PulseSequence(spin_system, parameters, H, R, K)
     rho_stack=shaped_pulse_af(spin_system,L,Ex,Ex,rho_stack,parameters.pulse_frq(3),parameters.pulse_pwr(3),...
         parameters.pulse_dur(3),parameters.pulse_phi(3),parameters.pulse_rnk(3),parameters.method);
     
-    % Refocus after pulse 3. - why is this different to example.
-    rho_stack=evolution(spin_system,L,[],rho_stack,2*stepsize,parameters.p2_nsteps,'final');
+    % Refocus after pulse 3.
+    echo_location=parameters.p1_p3_gap+parameters.pulse_dur(1)/2+...
+              parameters.pulse_dur(2)-parameters.echo_time/2;
+    rho_stack=evolution(spin_system,L,[],rho_stack,echo_location,1,'final');
 
-    echo_location=2*parameters.p1_p3_gap;
-    stepsize = echo_location/parameters.echo_nsteps;
+    stepsize = parameters.echo_time/parameters.echo_nsteps;
     % Final Evolution
     echo_stack=evolution(spin_system,L,parameters.coil,rho_stack,stepsize,parameters.echo_nsteps,'observable');
     end

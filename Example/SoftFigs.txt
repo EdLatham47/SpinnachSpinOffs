@@ -1,0 +1,17 @@
+Soft_3_p_Deer.1	-	2,3,4
+
+inter.zeeman.eigs{1}=[2.284 2.123 2.075];
+inter.zeeman.euler{1}=[135 90 45]*(pi/180);
+inter.zeeman.eigs{2}=[2.035 2.013 1.975];
+inter.zeeman.euler{2}=[30 60 120]*(pi/180);
+
+inter.coordinates=cell(2,1);
+inter.coordinates{1}=[0.00  0.00 0.00];
+inter.coordinates{2}=[20.00 0.00 0.00];
+ (Not Scalar Coupling)
+parameters.rho0=state(spin_system,'Lz','E');
+parameters.coil=state(spin_system,'L+','E');
+
+
+parameters.pulse_dur=[20e-9 50e-9 40e-9];
+parameters.pulse_frq=[9.720e9 10.255e9 9.720e9];

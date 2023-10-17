@@ -10,16 +10,16 @@ function OneScript()
     % defines structure of spins. 
     inter.zeeman.eigs = cell(1,2);
     inter.zeeman.euler = cell(1,2);
-    inter.coordinates = cell(2,1);
+    inter.coordinates = cell(1,2);
     % First Spin g-values then euler angle relative to B0.
     inter.zeeman.eigs{1}=[2.0034 2.0031 2.0027];
     inter.zeeman.euler{1}=[0 0 0];
-    inter.coordinates{1}=[0.00 0.00 0.00];
+    %inter.coordinates{1}=[0 0 0];
     % Second Spin g-values then euler angle relative to B0.
     inter.zeeman.eigs{2}=[2.005 2.007 2.009];
     inter.zeeman.euler{2}=[0 0 0];
-    inter.coordinates{2}=[15.00 0.00 0.00]; % Angstrungs
-    %inter.coupling.scalar={0 30*10^6; 0 0}; % Coupling
+    %inter.coordinates{2}=[1.5 0 0]; % Angstrungs
+    inter.coupling.scalar={0 30*10^6; 0 0}; % Coupling
     %   -    Providinng a specific Coupling such as this, makes the
     %   Frequency Sweep Spectrum very 'clean' whereas two distances
     %   provided provides the heavy 'interference'.
@@ -32,6 +32,8 @@ function OneScript()
                         % Specifying zero makes the system start at the lowest energy eigenstate of the Hamiltonian.
     %inter.rlx_keep='diagonal';%Not sure what these do..... will require further investigation.
     %inter.equilibrium='zero';
+    % inter.coupling.scalar = {0 30*10^6; 0 0}; % Off diags are coupling strengths in Hz.
+    
     %Create Spin System using the specifications above. (Before experimental parameters.)
     spin_system=create(sys,inter);
     % Basis Set
@@ -65,39 +67,38 @@ function OneScript()
     % offset - the offset of the pulse from the center of the pulse.
     parameters.offset = 0;   % a cell array giving transmitter off-sets in Hz on each of the spins listed in parameters.spins array, (Lamor Frequency from the Transmitter Frequency. 
     % http://nmrwiki.org/wiki/index.php?title=Offset#:~:text=From%20NMR%20Wiki&text=Offset%20(%CE%A9%2C%20omega%3B%20majuscule,for%20offset%20are%20in%20hertz.
-    %parameters.Bw=10^9; %Hz https://spindynamics.org/wiki/index.php?search=parameters.Bw&title=Special%3ASearch&go=Go
-    % Doesn't change even at 10^9
-
+    parameters.Bw=10^9; %Hz https://spindynamics.org/wiki/index.php?search=parameters.Bw&title=Special%3ASearch&go=Go
+    % Doesn't change even a
     % Sweep width in each dimension of the spectrum (Hz). - RESOLVED
-    parameters.sweep = 1e8;     % Width of Sweep for First Figure.
+    parameters.sweep = 1e9;     % Width of Sweep for First Figure.
     % Linewidth?
     parameters.fwhm=0.01;    %line FWHM, Tesla
 
     parameters.spins = {'E'}; % spins of the molecule that will be activlley operated on.
     % a combined initial state of both spins, alligned in the Bz direction. 
-    parameters.rho0=state(spin_system,'Lz','E');
+    parameters.rho0=state(spin_system,{'Lz','Lz'},{1,2});
     % detection state of the output files. (pi/2 tf L+), can add more than one detection state.
-    parameters.coil = state(spin_system,'L+','E');      
+    parameters.coil = state(spin_system,'L+',2);      
     %       THE INDIVIDUAL PULSES
     % DEER pulse parameters - all params can be lists for multi-pulse sequences. 
     %pulse_rnk 1 would be a perfect pulse. 2 does narruto change. 3 will aid in more complex-multi rotations. 
     parameters.pulse_rnk=[2 2 2];
     % Pulse duration
-    parameters.pulse_dur=[19e-9 39e-9 38e-9];       % altered 30ns suggestion
+    parameters.pulse_dur=[20e-9 40e-9 40e-9];       % altered 30ns suggestion
     % Phase on initial wave
     parameters.pulse_phi=[pi pi pi];
     % Power of the pulse
     parameters.pulse_pwr=2*pi*[8e6 8e6 8e6];
     % Frequency of the pulse - independantly specified is a bit odd.
-    parameters.pulse_frq=[9.345e9 9.36e9 9.345e9];
+    parameters.pulse_frq=[10.3e9 10.3e9 10.3e9];
     %        GAPS BETWEEN PULSES
     parameters.p1_p3_gap=1e-6;
     %fidelity of p2
-    parameters.p2_nsteps=256;
+    parameters.p2_nsteps=100;
     % readout gap for echo
-    parameters.echo_time=200e-9;
+    parameters.echo_time=100e-9;
     % pfidelity of echo
-    parameters.echo_nsteps=256;
+    parameters.echo_nsteps=100;
     %           SIMULATION
     % End of inputs, begin simulation.
 
